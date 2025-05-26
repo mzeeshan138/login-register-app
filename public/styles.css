@@ -1,0 +1,118 @@
+/* Base */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url('./bg.avif') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+/* Animated bubbles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  animation: rise 10s infinite ease-in;
+}
+@keyframes rise {
+  0% {
+    transform: translateY(100vh) scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+/* Glassmorphic card */
+.login-card {
+  position: relative;
+  z-index: 5;
+  max-width: 360px;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  backdrop-filter: blur(15px);
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  animation: fadeIn 1s ease-out;
+  color: #fff;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.login-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.login-header .form-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #ffd54f;
+}
+.login-header h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.form-control {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 0.8rem;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  transition: background 0.3s;
+}
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.5);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(255, 235, 59, 0.4);
+}
+.btn-login {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.8rem;
+  background: linear-gradient(135deg, #ffd54f, #ff8f00);
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 1px;
+  transition: transform 0.2s, filter 0.3s;
+}
+.btn-login:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.extra-links {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+.extra-links a {
+  color: #ffd54f;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  transition: color 0.2s;
+}
+.extra-links a:hover {
+  color: #fff;
+}
