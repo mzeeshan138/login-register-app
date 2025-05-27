@@ -7,12 +7,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
-// MySQL connection (XAMPP default user/password)
+// Use Coolify-injected MySQL variables (or fall back to .env)
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'usersdb',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 app.use(bodyParser.json());
