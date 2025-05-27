@@ -5,15 +5,10 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Use Coolify-injected MySQL variables (or fall back to .env)
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-});
+// Use the full connection string from env
+const pool = mysql.createPool(process.env.MYSQL_URL);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
