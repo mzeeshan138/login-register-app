@@ -19,6 +19,16 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+// Test initial connection and log result
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error(' Error connecting to database:', err.message);
+    return;
+  }
+  console.log(' Successfully connected to the database');
+  connection.release();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,16 +40,24 @@ app.post('/signup', async (req, res) => {
     return res.json({ success: false, message: 'All fields are required.' });
   }
 
-  // Hash password
-  const hash = await bcrypt.hash(password, 10);
-  pool.query(
-    'INSERT INTO users (username, password) VALUES (?, ?)',
-    [username, hash],
-    (err) => {
-      if (err) return res.json({ success: false, message: 'Username taken.' });
-      res.json({ success: true, message: 'Registration successful!' });
-    }
-  );
+  try {
+    // Hash password
+    const hash = await bcrypt.hash(password, 10);
+    pool.query(
+      'INSERT INTO users (username, password) VALUES (?, ?)',
+      [username, hash],
+      (err) => {
+        if (err) {
+          console.error(' Error during signup query:', err.message);
+          return res.json({ success: false, message: 'Username taken.' });
+        }
+        res.json({ success: true, message: 'Registration successful!' });
+      }
+    );
+  } catch (hashErr) {
+    console.error(' Error hashing password:', hashErr.message);
+    res.json({ success: false, message: 'Server error. Please try again.' });
+  }
 });
 
 // LOGIN endpoint
@@ -49,15 +67,27 @@ app.post('/login', (req, res) => {
     'SELECT * FROM users WHERE username = ?',
     [username],
     async (err, results) => {
-      if (err || results.length === 0) {
+      if (err) {
+        console.error(' Error during login query:', err.message);
+        return res.json({ success: false, message: 'Invalid credentials.' });
+      }
+      if (results.length === 0) {
         return res.json({ success: false, message: 'Invalid credentials.' });
       }
       const user = results[0];
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        return res.json({ success: false, message: 'Invalid credentials.' });
+      try {
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+          return res.json({ success: false, message: 'Invalid credentials.' });
+        }
+        res.json({ success: true, message: 'Login successful!' });
+      } catch (compareErr) {
+        console.error(' Error comparing passwords:', compareErr.message);
+        res.json({
+          success: false,
+          message: 'Server error. Please try again.',
+        });
       }
-      res.json({ success: true, message: 'Login successful!' });
     }
   );
 });
